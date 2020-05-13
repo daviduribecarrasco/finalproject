@@ -39,19 +39,33 @@ asteroid_list = [enemy_pos]
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-game_over = False
+game_over = True
 
 score = 0
 
 
 new_font = pygame.font.SysFont("monospace", 35)
 over_font = pygame.font.SysFont('monospace', 64)
+intro_font = pygame.font.SysFont('monospace', 35)
 
 clock = pygame.time.Clock()
 
+
+def game_intro_text():
+    
+    
+    intro_text = over_font.render("Asteroid Belt", True, (255, 255, 255))
+    screen.blit(intro_text,(400,150))
+
+    start_text = intro_font.render("Press SPACE key to start", True, (255, 255, 255))
+    screen.blit(start_text, (395, 500))
+
+
+
+
 def game_over_text():
     over_text = over_font.render("GAME OVER", True, (255, 255, 255))
-    screen.blit(over_text, (500, 100))
+    screen.blit(over_text, (430, 100))
 
 def set_difficulty(score, asteroid_speed):
     if score < 20:
@@ -67,8 +81,8 @@ def set_difficulty(score, asteroid_speed):
 
 
 def move_asteroid(asteroid_list):
-    delay = random.random()
-    if len(asteroid_list) < 10 and delay < 0.1:
+    num = random.random()
+    if len(asteroid_list) < 20 and num < 0.1:
         x_pos = random.randint(0,WIDTH-50
     )
         y_pos = 0
@@ -105,6 +119,24 @@ def isCollision(player_pos, enemy_pos):
             return True
     return False
 
+
+while game_over:
+    
+    screen.fill((0, 0, 0))
+    
+    screen.blit(background, (0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_over = False
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:  
+                game_over = False
+        game_intro_text()
+        pygame.display.update() 
+
+
+
 while not game_over:
 
     screen.fill(WHITE)
@@ -138,6 +170,11 @@ while not game_over:
     screen.blit(label, (WIDTH-1200, HEIGHT-40))
 
     if collision_check(asteroid_list, player_pos):
+        explosionSound = mixer.Sound("/Users/David Uribe/Desktop/guitartuner/finalproject/explosion.wav")
+        explosionSound.play()
+
+        
+
         game_over = True
         game_over_text()
         
