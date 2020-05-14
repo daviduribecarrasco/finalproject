@@ -9,10 +9,10 @@ from pygame import mixer
 pygame.init()
 
 pygame.display.set_caption("Asteroid Belt")
-icon = pygame.image.load('/Users/David Uribe/Desktop/guitartuner/finalproject/icon.png')
+icon = pygame.image.load('icon.png')
 pygame.display.set_icon(icon)
 
-mixer.music.load("/Users/David Uribe/Desktop/guitartuner/finalproject/spacetheme.wav")
+mixer.music.load("spacetheme.wav")
 mixer.music.play(-1)
 
 try:
@@ -33,13 +33,13 @@ WHITE = (255,255,255)
 
 asteroid_speed = 10
 
-background = pygame.image.load("/Users/David Uribe/Desktop/guitartuner/finalproject/space2.png")
+background = pygame.image.load("space2.png")
 
 
 player_pos = [WIDTH/2, 620]
-playerImg = pygame.image.load('/Users/David Uribe/Desktop/guitartuner/finalproject/player.png')
+playerImg = pygame.image.load('player.png')
 
-enemyImg = pygame.image.load('/Users/David Uribe/Desktop/guitartuner/finalproject/asteroid.png')
+enemyImg = pygame.image.load('asteroid.png')
 
 
 enemy_pos = [random.randint(0,WIDTH-50), 0]
@@ -195,7 +195,7 @@ while not game_over:
     
     
     if collision_check(asteroid_list, player_pos):
-        explosionSound = mixer.Sound("/Users/David Uribe/Desktop/guitartuner/finalproject/explosion.wav")
+        explosionSound = mixer.Sound("explosion.wav")
         explosionSound.play()
 
         if score > high_score:
