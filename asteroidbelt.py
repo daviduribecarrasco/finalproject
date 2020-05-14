@@ -1,5 +1,7 @@
 import pygame
+import pickle
 import sys
+import time
 import random
 from pygame import mixer
 
@@ -12,6 +14,13 @@ pygame.display.set_icon(icon)
 
 mixer.music.load("/Users/David Uribe/Desktop/guitartuner/finalproject/spacetheme.wav")
 mixer.music.play(-1)
+
+try:
+    with open("score.dat",'rb') as file:
+        high_score = pickle.load(file)
+except:
+    high_score = 0
+
 
 
 
@@ -47,6 +56,7 @@ score = 0
 new_font = pygame.font.SysFont("monospace", 35)
 over_font = pygame.font.SysFont('monospace', 64)
 intro_font = pygame.font.SysFont('monospace', 35)
+high_score_font = pygame.font.SysFont('monospace', 35)
 
 clock = pygame.time.Clock()
 
@@ -57,6 +67,9 @@ def game_intro_text():
     intro_text = over_font.render("Asteroid Belt", True, (255, 255, 255))
     screen.blit(intro_text,(400,150))
 
+    high_score_text = high_score_font.render("Top Score:" + str(high_score), True,(255,255,255))
+    screen.blit(high_score_text,(500,300))
+
     start_text = intro_font.render("Press SPACE key to start", True, (255, 255, 255))
     screen.blit(start_text, (395, 500))
 
@@ -66,6 +79,7 @@ def game_intro_text():
 def game_over_text():
     over_text = over_font.render("GAME OVER", True, (255, 255, 255))
     screen.blit(over_text, (430, 100))
+
 
 def set_difficulty(score, asteroid_speed):
     if score < 20:
@@ -88,9 +102,13 @@ def move_asteroid(asteroid_list):
         y_pos = 0
         asteroid_list.append([x_pos, y_pos])
 
+
+
 def make_asteroid(asteroid_list):
     for enemy_pos in asteroid_list:
         screen.blit(enemyImg,(enemy_pos[0], enemy_pos[1]))
+
+
 
 def update_asteroid_pos(asteroid_list, score):
     for i, enemy_pos in enumerate(asteroid_list):
@@ -101,11 +119,13 @@ def update_asteroid_pos(asteroid_list, score):
             score += 1
     return score
 
+
 def collision_check(asteroid_list, player_pos):
     for enemy_pos in asteroid_list:
         if isCollision(enemy_pos, player_pos):
             return True
     return False
+
 
 def isCollision(player_pos, enemy_pos):
     player_x = player_pos[0]
@@ -118,6 +138,8 @@ def isCollision(player_pos, enemy_pos):
          if (enemy_y >= player_y and enemy_y < (player_y + 50)) or (player_y >= enemy_y and player_y < (enemy_y+50 )):
             return True
     return False
+
+
 
 
 while game_over:
@@ -134,6 +156,7 @@ while game_over:
                 game_over = False
         game_intro_text()
         pygame.display.update() 
+
 
 
 
@@ -169,14 +192,21 @@ while not game_over:
     label = new_font.render(text, 1, WHITE)
     screen.blit(label, (WIDTH-1200, HEIGHT-40))
 
+    
+    
     if collision_check(asteroid_list, player_pos):
         explosionSound = mixer.Sound("/Users/David Uribe/Desktop/guitartuner/finalproject/explosion.wav")
         explosionSound.play()
 
-        
+        if score > high_score:
+            high_score = score
+            with open("score.dat", "wb") as file:
+                pickle.dump(high_score,file)
 
-        game_over = True
+        
         game_over_text()
+        game_over = True
+    
         
 
     make_asteroid(asteroid_list)
